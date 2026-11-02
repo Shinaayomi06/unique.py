@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Member Portal</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* Base reset */
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            min-height: 100vh;
+            display: grid;
+            place-items: center;
+            /* Colorful deep gradient background */
+            background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #312e81 100%);
+            padding: 20px;
+        }
+
+        /* Glass card container */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 24px;
+            padding: 3rem;
+            width: 100%;
+            max-width: 420px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Decorative glow points */
+        .glass-card::before {
+            content: '';
+            position: absolute;
+            top: -50%; left: -50%;
+            width: 200%; height: 200%;
+            background: radial-gradient(circle, rgba(139, 92, 246, 0.3) 0%, transparent 60%);
+            pointer-events: none;
+        }
+
+        h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            text-align: center;
+            /* Gradient text */
+            background: linear-gradient(to right, #22d3ee, #a78bfa, #f472b6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: rgba(226, 232, 240, 0.6);
+            margin-bottom: 2rem;
+            font-size: 0.9rem;
+        }
+
+        /* Form elements */
+        .form-group { margin-bottom: 1.2rem; position: relative; z-index: 1; }
+
+        input {
+            width: 100%;
+            padding: 1rem 1.2rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            color: #e2e8f0;
+            font-size: 1rem;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        input::placeholder { color: rgba(226, 232, 240, 0.4); }
+
+        input:focus {
+            border-color: #8b5cf6;
+            background: rgba(255, 255, 255, 0.08);
+            box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.2);
+        }
+
+        /* Neon button */
+        .btn {
+            width: 100%;
+            padding: 1rem;
+            border: none;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            z-index: 1;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #8b5cf6, #ec4899);
+            color: white;
+            box-shadow: 0 4px 15px rgba(139, 92, 246, 0.4);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(139, 92, 246, 0.6);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: #e2e8f0;
+            margin-top: 1rem;
+        }
+
+        .btn-secondary:hover {
+            border-color: #22d3ee;
+            color: #22d3ee;
+        }
+
+        /* Switch link */
+        .switch-link {
+            display: block;
+            text-align: center;
+            margin-top: 1.5rem;
+            color: rgba(226, 232, 240, 0.6);
+            font-size: 0.9rem;
+            cursor: pointer;
+            position: relative;
+            z-index: 1;
+        }
+        .switch-link span { color: #22d3ee; font-weight: 600; }
+
+        /* Flash message */
+        .flash {
+            background: rgba(236, 72, 153, 0.15);
+            border: 1px solid rgba(236, 72, 153, 0.3);
+            color: #fbcfe8;
+            padding: 0.8rem;
+            border-radius: 10px;
+            margin-bottom: 1.5rem;
+            text-align: center;
+            font-size: 0.9rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Simple toggle between login/register forms */
+        .hidden { display: none; }
+    </style>
+</head>
+<body>
+
+<div class="glass-card">
+    <h1>Welcome Back</h1>
+    <p class="subtitle">Sign in to access your dashboard</p>
+
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            {% for msg in messages %}
+                <div class="flash">{{ msg }}</div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+
+    <!-- Login form -->
+    <form id="login-form" action="/login" method="POST">
+        <div class="form-group">
+            <input type="email" name="email" placeholder="Email address" required>
+        </div>
+        <div class="form-group">
+            <input type="password" name="password" placeholder="Password" required>
+        </div>
+        <button type="submit" class="btn btn-primary">Log In</button>
+    </form>
+
+    <!-- Registration form (hidden by default) -->
+    <form id="register-form" class="hidden" action="/register" method="POST">
+        <div class="form-group">
+            <input type="text" name="username" placeholder="Username" required>
+        </div>
+        <div class="form-group">
+            <input type="email" name="email" placeholder="Email address" required>
+        </div>
+        <div class="form-group">
+            <input type="password" name="password" placeholder="Password (min 6 chars)" required minlength="6">
+        </div>
+        <button type="submit" class="btn btn-primary">Create Account</button>
+    </form>
+
+    <div class="switch-link" id="toggle-text">
+        Don't have an account? <span>Sign up</span>
+    </div>
+</div>
+
+<script>
+    // Simple form toggle logic
+    const loginForm = document.getElementById('login-form');
+    const registerForm = document.getElementById('register-form');
+    const toggleText = document.getElementById('toggle-text');
+    const title = document.querySelector('h1');
+    const subtitle = document.querySelector('.subtitle');
+
+    toggleText.addEventListener('click', () => {
+        if (loginForm.classList.contains('hidden')) {
+            loginForm.classList.remove('hidden');
+            registerForm.classList.add('hidden');
+            title.textContent = 'Welcome Back';
+            subtitle.textContent = 'Sign in to access your dashboard';
+            toggleText.innerHTML = 'Don\'t have an account? <span>Sign up</span>';
+        } else {
+            loginForm.classList.add('hidden');
+            registerForm.classList.remove('hidden');
+            title.textContent = 'Create Account';
+            subtitle.textContent = 'Join us to get started';
+            toggleText.innerHTML = 'Already have an account? <span>Log in</span>';
+        }
+    });
+</script>
+
+</body>
+</html>
